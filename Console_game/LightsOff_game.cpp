@@ -42,9 +42,8 @@ void LightsOff::generate_game() {
             field_[i][j] = 0;
         }
     }
-    // Проверяем размер поля на нечетность для того, чтобы исключить вероятность генерации выигрышного поля
-    // Если размер поля число четное, то может случиться двойное нажатие на один и тот же огонёк и поле не изменится
-    if (size_ % 2 == 0) { 
+    // Размер поля = число нажатий
+    if (size_ % 2 == 0) {
         for (int k = 0; k < size_ - 1; k++) {
             int row = rand() % size_;
             int col = rand() % size_;
@@ -135,14 +134,20 @@ int LightsOff::download_game() {
     if (!file.is_open()) {
         cout << "Ошибка открытия файла для загрузки!" << endl;
         cout << "Файл game_save.txt не найден." << endl;
-        return 0;
+        return -1; 
     }
 
-    file >> size_;
-    if (file.fail() || size_ <= 2 || size_ > 10) {
+    if (!(file >> size_)) {
         cout << "Ошибка чтения размера поля из файла!" << endl;
         file.close();
-        return 0;
+        return -1;
+    }
+
+    if (size_ <= 2 || size_ > 10) {
+        cout << "Некорректный размер поля в файле: " << size_ << endl;
+        cout << "Размер должен быть от 3 до 10." << endl;
+        file.close();
+        return -1;
     }
 
     field_.resize(size_, vector<int>(size_));
@@ -151,8 +156,15 @@ int LightsOff::download_game() {
         for (int j = 0; j < size_; j++) {
             if (!(file >> field_[i][j])) {
                 cout << "Ошибка чтения данных поля из файла!" << endl;
+                cout << "Ожидалось " << size_ * size_ << " значений." << endl;
                 file.close();
-                return 0;
+                return -1;
+            }
+            if (field_[i][j] != 0 && field_[i][j] != 1) {
+                cout << "Некорректное значение в поле! " << endl;
+                cout << "Значения должны быть 0 или 1." << endl;
+                file.close();
+                return -1;
             }
         }
     }
@@ -161,7 +173,13 @@ int LightsOff::download_game() {
     if (!(file >> moves)) {
         cout << "Ошибка чтения количества ходов из файла!" << endl;
         file.close();
-        return 0;
+        return -1;
+    }
+
+    if (moves < 0) {
+        cout << "Некорректное количество ходов: " << moves << endl;
+        file.close();
+        return -1;
     }
 
     file.close();
