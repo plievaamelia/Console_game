@@ -4,6 +4,7 @@
 int main() {
     using namespace std;
 
+    setlocale(LC_ALL, "Russian");
     srand(time(nullptr));
 
     LightsOff game;
@@ -13,23 +14,23 @@ int main() {
     bool game_won = false;
 
     do {
-        cout << "\nLIGHTS OUT GAME " << endl;
-        cout << "1. New game" << endl;
+        cout << "\n ИГРА 'ГАСИМ СВЕТ' " << endl;
+        cout << "1. Новая игра" << endl;
 
         if (game_loaded && !game_won) {
-            cout << "2. Make a move" << endl;
-            cout << "3. Save game" << endl;
-            cout << "4. Show field" << endl;
+            cout << "2. Сделать ход" << endl;
+            cout << "3. Сохранить игру" << endl;
+            cout << "4. Показать поле" << endl;
         }
 
-        cout << "5. Load game" << endl;
-        cout << "6. Game rules" << endl;
-        cout << "7. Exit" << endl;
+        cout << "5. Загрузить игру" << endl;
+        cout << "6. Правила игры" << endl;
+        cout << "7. Выход" << endl;
 
-        cout << "Select action: ";
+        cout << "Выберите действие: ";
         if (!(game_loaded && !game_won)) {
             while (!(cin >> choice) || choice < 1 || choice > 7 || (choice > 1 && choice < 5)) {
-                cout << "Invalid choice! Enter number 1, 5, 6 or 7: ";
+                cout << "Неверный выбор! Введите число 1, 5, 6 или 7: ";
                 cin.clear();
                 cin.ignore(1000, '\n');
             }
@@ -37,19 +38,19 @@ int main() {
         }
         else {
             while (!(cin >> choice) || choice < 1 || choice > 7) {
-                cout << "Invalid choice! Enter number from 1 to 7: ";
+                cout << "Неверный выбор! Введите число от 1 до 7: ";
                 cin.clear();
                 cin.ignore(1000, '\n');
             }
             cin.ignore(1000, '\n');
         }
         switch (choice) {
-        case 1: { // New game
+        case 1: { // Новая игра
             int size;
-            cout << "Enter field size (from 3 to 10): ";
+            cout << "Введите размер поля (от 3 до 10): ";
 
             while (!(cin >> size) || size < 3 || size > 10) {
-                cout << "Enter integer from 3 to 10: ";
+                cout << "Введите целое число от 3 до 10: ";
                 cin.clear();
                 cin.ignore(1000, '\n');
             }
@@ -61,30 +62,30 @@ int main() {
             game_loaded = true;
             game_won = false;
 
-            cout << "NEW GAME! Size: " << size << "x" << size << endl;
+            cout << "НОВАЯ ИГРА! Размер: " << size << "x" << size << endl;
             game.print_field();
             break;
         }
 
-        case 2: { // Make a move
+        case 2: { // Сделать ход
             if (!game_loaded) {
-                cout << "First start a new game!" << endl;
+                cout << "Сначала начните новую игру!" << endl;
                 break;
             }
 
             if (game_won) {
-                cout << "Game already won! Start a new game." << endl;
+                cout << "Игра уже завершена победой! Начните новую игру." << endl;
                 break;
             }
 
             game.print_field();
-            cout << "Current moves: " << moves << endl;
+            cout << "Текущие ходы: " << moves << endl;
 
             int row, col;
-            cout << "\nEnter coordinates for move (row column): ";
+            cout << "\nВведите координаты для хода (строка столбец): ";
 
             while (!(cin >> row >> col) || row < 1 || row > game.get_size() || col < 1 || col > game.get_size()) {
-                cout << "Invalid coordinates! Enter two numbers from 1 to "
+                cout << "Неверные координаты! Введите два числа от 1 до "
                     << game.get_size() << ": ";
                 cin.clear();
                 cin.ignore(1000, '\n');
@@ -96,47 +97,47 @@ int main() {
 
             if (game.check_win()) {
                 game_won = true;
-                cout << "CONGRATULATIONS! YOU WON!" << endl;
-                cout << "Total moves: " << moves << endl;
+                cout << "ПОЗДРАВЛЯЕМ! ВЫ ПОБЕДИЛИ!" << endl;
+                cout << "Всего ходов: " << moves << endl;
                 game.print_field();
             }
             else {
-                cout << "Move completed! Total moves: " << moves << endl;
+                cout << "Ход выполнен! Всего ходов: " << moves << endl;
                 game.print_field();
             }
             break;
         }
 
-        case 3: { // Save the game
+        case 3: { // Сохранить игру
             if (!game_loaded) {
-                cout << "No active game to save!" << endl;
+                cout << "Нет активной игры для сохранения!" << endl;
                 break;
             }
             game.save_game(moves);
-            cout << "Game saved. Moves made: " << moves;
+            cout << "Игра сохранена. Ходов сделано: " << moves;
             if (game_won) {
-                cout << " (Game completed with victory)";
+                cout << " (Игра завершена победой)";
             }
             cout << endl;
             break;
         }
 
-        case 4: { // Displaying a field
+        case 4: { // Показать поле
             if (!game_loaded) {
-                cout << "No active game!" << endl;
+                cout << "Нет активной игры!" << endl;
                 break;
             }
 
             game.print_field();
-            cout << "Moves made: " << moves;
+            cout << "Ходов сделано: " << moves;
             if (game_won) {
-                cout << " (Game completed with victory)";
+                cout << " (Игра завершена победой)";
             }
             cout << endl;
             break;
         }
 
-        case 5: { // Loading a game from a file
+        case 5: { // Загрузить игру из файла
             int loaded_moves = game.download_game();
             if (loaded_moves >= 0) {
                 game_loaded = true;
@@ -146,7 +147,7 @@ int main() {
 
                 game.print_field();
                 if (game_won) {
-                    cout << " (Game completed with victory)";
+                    cout << " (Игра завершена победой)";
                 }
                 cout << endl;
             }
@@ -154,13 +155,13 @@ int main() {
 
         }
         case 6:
-            cout << "Game goal: Turn off all lights on the game field. 1 - lights are on, 0 - lights are off" << endl;
-            cout << "Game mechanics: When clicking on any light, its state toggles (light turns on or off) together with the state of four neighboring lights (top, bottom, left, and right)." << endl;
-            cout << "Victory condition: All lights on the game field must be turned off." << endl;
+            cout << "Цель игры: Погасить все огни на игровом поле. 1 - огонёк горит, 0 - не горит." << endl;
+            cout << "Механика игры: При нажатии на любой огонёк переключается его состояние (свет включается или выключается) вместе с состоянием четырёх соседних огоньков (верхнего, нижнего, левого и правого)." << endl;
+            cout << "Условие победы: Все огоньки на игровом поле должны быть погашены. То есть должны остаться лишь нули." << endl;
             break;
 
-        case 7: { // Exit
-            cout << "Thank you for playing! Goodbye!" << endl;
+        case 7: { // Выход
+            cout << "Спасибо за игру! До свидания!" << endl;
             break;
         }
 
