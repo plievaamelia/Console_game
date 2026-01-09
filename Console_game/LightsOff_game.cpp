@@ -1,4 +1,4 @@
-﻿#include "game.h"
+#include "game.h"
 #include <iostream>
 #include <iomanip>
 #include <fstream>
@@ -7,7 +7,7 @@
 
 using namespace std;
 
-// Private method, the main function of making a move
+// Приватный метод, основная функция совершения хода
 void LightsOff::switching(int row, int col) {
     field_[row][col] = 1 - field_[row][col];
 
@@ -25,7 +25,7 @@ void LightsOff::switching(int row, int col) {
     }
 }
 
-// Constructors
+// Конструкторы
 LightsOff::LightsOff() : size_(0) {}
 
 LightsOff::LightsOff(int size) {
@@ -33,7 +33,7 @@ LightsOff::LightsOff(int size) {
     field_ = vector<vector<int>>(size_, vector<int>(size_));
 }
 
-// Game generation
+// Генерация игры
 void LightsOff::generate_game() {
     srand(time(nullptr));
 
@@ -42,7 +42,9 @@ void LightsOff::generate_game() {
             field_[i][j] = 0;
         }
     }
-    if (size_ % 2 == 0) {
+    // Проверяем размер поля на нечетность для того, чтобы исключить вероятность генерации выигрышного поля
+    // Если размер поля число четное, то может случиться двойное нажатие на один и тот же огонёк и поле не изменится
+    if (size_ % 2 == 0) { 
         for (int k = 0; k < size_ - 1; k++) {
             int row = rand() % size_;
             int col = rand() % size_;
@@ -59,16 +61,16 @@ void LightsOff::generate_game() {
 
 }
 
-// Player's move
+// Ход игрока
 void LightsOff::make_move(int row, int col) {
     if (row < 1 || row > size_ || col < 1 || col > size_) {
-        cout << "Invalid coordinates! Use values ​​from 1 to " << size_ << endl;
+        cout << "Неверные координаты! Используйте значения от 1 до " << size_ << endl;
         return;
     }
     switching(row - 1, col - 1);
 }
 
-// Check for win
+// Проверка победы
 bool LightsOff::check_win() {
     for (int i = 0; i < size_; i++) {
         for (int j = 0; j < size_; j++) {
@@ -80,10 +82,10 @@ bool LightsOff::check_win() {
     return true;
 }
 
-// Displaying a field to the console
+// Отображение поля на консоли
 void LightsOff::print_field() {
     if (size_ == 0) {
-        cout << "The field is not initialized!" << endl;
+        cout << "Поле не инициализировано!" << endl;
         return;
     }
     cout << "    ";
@@ -106,11 +108,11 @@ void LightsOff::print_field() {
     }
 }
 
-// Saving the game to a file
+// Сохранение игры в файл
 void LightsOff::save_game(int moves) {
     ofstream file("game_save.txt");
     if (!file.is_open()) {
-        cout << "Error opening file for saving!" << endl;
+        cout << "Ошибка открытия файла для сохранения!" << endl;
         return;
     }
 
@@ -124,21 +126,21 @@ void LightsOff::save_game(int moves) {
     file << moves;
     file.close();
 
-    cout << "The game is saved to a file game_save.txt" << endl;
+    cout << "Игра сохранена в файл game_save.txt" << endl;
 }
 
-// Loading a game from a file
+// Загрузка игры из файла
 int LightsOff::download_game() {
     ifstream file("game_save.txt");
     if (!file.is_open()) {
-        cout << "Error opening file for download!" << endl;
-        cout << "File game_save.txt not found." << endl;
+        cout << "Ошибка открытия файла для загрузки!" << endl;
+        cout << "Файл game_save.txt не найден." << endl;
         return 0;
     }
 
     file >> size_;
     if (file.fail() || size_ <= 2 || size_ > 10) {
-        cout << "Error reading field size from file!" << endl;
+        cout << "Ошибка чтения размера поля из файла!" << endl;
         file.close();
         return 0;
     }
@@ -148,7 +150,7 @@ int LightsOff::download_game() {
     for (int i = 0; i < size_; i++) {
         for (int j = 0; j < size_; j++) {
             if (!(file >> field_[i][j])) {
-                cout << "Error reading field data from file!" << endl;
+                cout << "Ошибка чтения данных поля из файла!" << endl;
                 file.close();
                 return 0;
             }
@@ -157,17 +159,16 @@ int LightsOff::download_game() {
 
     int moves;
     if (!(file >> moves)) {
-        cout << "Error reading number of moves from file!" << endl;
+        cout << "Ошибка чтения количества ходов из файла!" << endl;
         file.close();
         return 0;
     }
 
     file.close();
 
-    cout << "The game has been successfully loaded from the game_save.txt file." << endl;
-    cout << "Field size: " << size_ << "x" << size_ << endl;
-    cout << "Moves made: " << moves << endl;
-
+    cout << "Игра успешно загружена из файла game_save.txt" << endl;
+    cout << "Размер поля: " << size_ << "x" << size_ << endl;
+    cout << "Ходов сделано: " << moves << endl;
 
     return moves;
 }
