@@ -83,10 +83,6 @@ bool LightsOff::check_win() {
 
 // Отображение поля на консоли
 void LightsOff::print_field() {
-    if (size_ == 0) {
-        cout << "Поле не инициализировано!" << endl;
-        return;
-    }
     cout << "    ";
     for (int j = 0; j < size_; j++) {
         cout << setw(3) << j + 1;
