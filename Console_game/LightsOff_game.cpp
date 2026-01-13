@@ -152,7 +152,6 @@ int LightsOff::download_game() {
         for (int j = 0; j < size_; j++) {
             if (!(file >> field_[i][j])) {
                 cout << "Ошибка чтения данных поля из файла!" << endl;
-                cout << "Ожидалось " << size_ * size_ << " значений." << endl;
                 file.close();
                 return -1;
             }
